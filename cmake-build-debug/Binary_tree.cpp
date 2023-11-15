@@ -18,7 +18,8 @@ Node *Binary_tree::_search(Node *temp, int data) {
         return _search(temp->right,data);
 }
 void Binary_tree::_insert(Node *temp, int data) {
-    while(temp!=nullptr){
+    if(te)
+    while(temp!=nullptr)){
         if(temp->data<data){
             if(temp->right!= nullptr)
                 temp=temp->right;
@@ -138,10 +139,6 @@ Binary_tree::Binary_tree() {
 }
 
 void Binary_tree::insert(int data) {
-    if(root== nullptr) {
-        root = new Node(data, nullptr);
-        return;
-    }
     _insert(root,data);
 }
 
