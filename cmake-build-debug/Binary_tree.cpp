@@ -17,28 +17,14 @@ Node *Binary_tree::_search(Node *temp, int data) {
     else
         return _search(temp->right,data);
 }
-void Binary_tree::_insert(Node *temp, int data) {
-    while(temp!=nullptr){
-        if(temp->data<data){
-            if(temp->right!= nullptr)
-                temp=temp->right;
-            else{
-                Node* _new=new Node(data,temp);
-                temp->right=_new;
-                break;
-            }
-        }
-        else{
-            if(temp->left!= nullptr)
-                temp=temp->left;
-            else{
-                Node* _new=new Node(data,temp);
-                temp->left=_new;
-                break;
-            }
-        }
-
-    }
+Node* Binary_tree::_insert(Node *temp, int data) {
+    if (temp == NULL)
+        return new Node(data, nullptr);
+    if (data < temp->data)
+        temp->left = _insert(temp->left, data);
+    else if (data > temp->data)
+        temp->right = _insert(temp->right, data);
+    return temp;
 }
 Node *Binary_tree::_next(int data) {
     Node* current= root,*successor= nullptr;
@@ -75,56 +61,41 @@ Node *Binary_tree::_prev(int data) {
     }
     return  successor;
 }
-void Binary_tree::_delete( int data) {
-    Node* buffer= _search(this->root,data);
-    if(buffer== nullptr)
-        return;
-    Node*parent =buffer->parent;
-    if(buffer->left== nullptr && buffer->right== nullptr){
-        if(parent->right==buffer){
-            delete buffer;
-            parent->right= nullptr;
-        }
-        else{
-            delete buffer;
-            parent->left= nullptr;
-        }
+Node* Binary_tree::_delete(Node* root, int data) {
+    if (root == NULL)
+        return root;
+    if (root->data > data) {
+        root->left = _delete(root->left, data);
+        return root;
     }
-
-
-    else if(buffer->left== nullptr || buffer->right== nullptr){
-        if(buffer->left== nullptr){
-            if(parent->right==buffer)
-                parent->right=buffer->right;
-            else
-                parent->left=buffer->right;
-            buffer->right->parent=buffer->parent;
-            delete buffer;
-        }
-        else{
-            if(parent->right==buffer)
-                parent->right=buffer->left;
-            else
-                parent->left=buffer->left;
-            buffer->left->parent=buffer->parent;
-            delete buffer;
-        }
+    else if (root->data < data) {
+        root->right = _delete(root->right, data);
+        return root;
     }
-
-    else{
-        Node* successor = _next(buffer);
-        buffer->data=successor->data;
-        if(successor->parent->left==successor){
-            successor->parent->left=successor->right;
-            if(successor->right!= nullptr)
-                successor->right->parent=successor->parent;
+    if (root->left == NULL) {
+        Node* temp = root->right;
+        delete root;
+        return temp;
+    }
+    else if (root->right == NULL) {
+        Node* temp = root->left;
+        delete root;
+        return temp;
+    }
+    else {
+        Node* succParent = root;
+        Node* succ = root->right;
+        while (succ->left != NULL) {
+            succParent = succ;
+            succ = succ->left;
         }
-        else{
-            successor->parent->right=successor->right;
-            if(successor->right!= nullptr)
-                successor->right->parent=successor->parent;
-        }
-
+        if (succParent != root)
+            succParent->left = succ->right;
+        else
+            succParent->right = succ->right;
+        root->data = succ->data;
+        delete succ;
+        return root;
     }
 
 }
@@ -146,7 +117,7 @@ void Binary_tree::insert(int data) {
 }
 
 void Binary_tree::deleteT(int data) {
-    _delete(data);
+    root=_delete(root,data);
 }
 
 std::string Binary_tree::search(int data) {

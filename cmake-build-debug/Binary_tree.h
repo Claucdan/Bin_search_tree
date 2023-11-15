@@ -22,11 +22,11 @@ private:
     Node* min(Node* temp);
 
     Node* _search(Node* temp,int data);
-    void _insert(Node* temp,int data);
+    Node* _insert(Node* temp,int data);
     Node* _next(int data);
     Node* _next(Node* temp);
     Node* _prev(int data);
-    void _delete(int data);
+    Node* _delete(Node* root,int data);
 public:
     Binary_tree();
     void insert(int data);

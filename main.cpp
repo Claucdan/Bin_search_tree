@@ -3,7 +3,7 @@
 int main() {
     Binary_tree tree;
     std::string line;
-    int key;
+    long key;
     while (std::cin>>line){
         switch (line[0]) {
             case 'i':
